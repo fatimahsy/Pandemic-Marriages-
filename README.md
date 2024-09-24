@@ -1,21 +1,26 @@
-# Marriages in Toronto befor and after the pandemic 
+# Seasonal Variation in Marriage License Applications
 
-## Overview
-This repo provides students with a foundation for their own projects investigating the impact of the COVID-19 pandemic on marriage licenses in Toronto. It is structured to allow analysis and storytelling using data. You do not need every aspect for every paper and should delete aspects that you do not need.
+## 📌 Overview
+
+This repository supports the analysis of how holidays influence marriage license applications in Toronto from 2011 to 2024. The project investigates trends in marriage license issuance during key holiday periods such as Valentine's Day and the festive season. The analysis highlights the seasonal impact of holidays on marriage-related decisions. This repository is designed to facilitate the reproduction of this analysis and to provide a framework for similar investigations.
 
 
-## File Structure
+## 🗂️ File Structure
 
 The repo is structured as:
 
--   `data/raw_data` contains the raw data as obtained from X.
+-   `data/raw_data` contains the raw data as obtained from Open Data Toronto.
 -   `data/analysis_data` contains the cleaned dataset that was constructed.
 -   `other` contains relevant literature, details about LLM chat interactions, and sketches.
 -   `paper` contains the files used to generate the paper, including the Quarto document and reference bibliography file, as well as the PDF of the paper. 
 -   `scripts` contains the R scripts used to simulate, download and clean data.
 
 
-## Statement on LLM usage
+## 🤖 LLM Usage
 
 LLM's were used to help create the abstract of this paper.
 
+
+## 🚀 Launching into Fun!
+
+Thanks for exploring my paper! 🌈 May your code be bug-free and your creativity limitless. Happy coding! 🚀
