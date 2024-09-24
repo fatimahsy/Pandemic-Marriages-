@@ -1,5 +1,5 @@
 #### Preamble ####
-# Purpose: Simulates Toronto Marriabe Data
+# Purpose: Simulates Toronto Marriage Data
 # Author: Fatimah Yunusa
 # Date: 19 September 2024
 # Contact: fatimah.yunusa@mail.utoronto.ca

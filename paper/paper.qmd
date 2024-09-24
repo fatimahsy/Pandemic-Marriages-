@@ -1,12 +1,13 @@
 ---
-title: "Mariage Liciences Pre and Post Pandemic"
-subtitle: "Was there a difference? "
+title: "Seasonal Variation in Marriage License Applications"
+subtitle: "An Exploratory Analysis with Open Data Toronto"
 author: 
   - Fatimah Yunusa
 thanks: "Code and data are available at: https://github.com/fatimahsy/Pandemic-Marriages-.git."
 date: today
 date-format: long
-abstract: "This paper examines trends in marriage licenses in Toronto, focusing on the effects of the COVID-19 pandemic on marital patterns. Using a dataset of marriage license registrations from 2015-2023, we apply time series analysis and statistical comparisons to investigate shifts in marriage rates before, during, and after the pandemic. Our findings show a significant decline in licenses issued during the pandemic, followed by a sharp increase in the post-pandemic period. These results suggest that social disruptions caused by the pandemic have had lasting effects on marriage trends, potentially influencing future policy and service planning ."
+abstract: "**IN PROGRESS**       
+What was done:Marriage License data from Toronto between 2011 and 2024 was analysed to determine weather holidays influence the number of applications.  What was found: Months associated with popular holidays like February (Valentine's day) and December( Christmas), show an increase in marriage license applications. Why this matters:Understanding these patterns can help city officials anticipate changes in demand for marriage-related services and allocate resources accordingly, ensuring that civil centers are prepaered for these seasonal shifts. It also gives us an insight into how emotional and culturl influences during holidays can drive personal descisions.  "
 format: pdf
 number-sections: true
 bibliography: references.bib
@@ -22,12 +23,32 @@ library(tidyverse)
 data <- read_csv(here::here("data/analysis_data/analysis_data"))
 
 ```
+# Introduction 
 
-We use @citeR and @opendata.
+The Data @sec-data of this paper explores the `opendatatoronto` data and outlines tools and methods used to analyze the data and some preliminary observations observed. The Results @sec-results introduces more observations found from the data analysis. The Discussion @sec-disc ties back the findings to its real world relevance. Lastly, the Conclusion @sec-concl summarizes key findings and outlines future areas of study.
+
+
+
 
 # Data {#sec-data}
 
-Some of our data is of Marriage licences (@fig-marriage) from @opendatatoronto. The scatter plot (@fig-marriage) displays the number of marriage licenses issued in Toronto over time, spanning from before 2015 to approximately 2025. The graph shows relatively stable issuance of licenses between 2015 and 2019, with a noticeable drop around 2020, coinciding with the onset of the COVID-19 pandemic. Following this decline, there is a sharp increase in licenses after 2021, suggesting a recovery and potential backlog of marriages post-pandemic. The pronounced spike in recent years indicates a significant shift in marriage behavior, likely influenced by the social and economic impacts of the pandemic.
+## Tools 
+We use @citeR and @opendata
+* `ggplot2` [@citeggplot] 
+* `dplyr` [@citedplyr] 
+* `readr` [@citereadr] 
+* `tibble` [@citetibble]
+
+
+## Dataset Overview 
+Some of our data is of Marriage licences (@fig-marriage) from @opendata.
+
+## Variable Descriptions 
+
+## Basic Summary Statistics of the Data 
+
+The scatter plot (@fig-marriage) displays the number of marriage licenses issued in Toronto over time, spanning from before 2015 to approximately 2025. .
+
 
 ```{r}
 #| label: fig-marriage
@@ -39,6 +60,16 @@ data |>
   geom_point()
 
 ```
+# Results {#sec-results}
+
+
+
+
+# Discussion {#sec-disc}
+
+
+
+# Conclusion {#sec-concl}
 
 \`\`\`
 
