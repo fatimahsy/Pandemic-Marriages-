@@ -28,6 +28,8 @@ bibliography: references.bib
 # install.packages("knitr")
 # install.packages("here")
 # install.packages("kableExtra")
+# install.packages("lubridate")
+library(lubridate)
 library(tidyverse)
 library(ggplot2)
 library(dplyr)
@@ -214,6 +216,71 @@ data %>%
 ```
 
 ```{r}
+#| label: february-table
+#| fig-cap: "Table 1: Total Marriage Licenses Issued in February for Each Year"
+#| echo: false
+#| warning: false
+#| message: false
+
+# Summarize February Data: Filter for February and calculate the total number of licenses
+february_data <- data %>%
+  filter(month == "02") %>%  # Filter for February
+  group_by(year) %>%  # Group by year
+  summarise(february_licenses = sum(marriage_licenses))  # Summarize total licenses in February
+
+# Create a table of February marriage licenses for each year
+knitr::kable(
+  february_data,
+  caption = "Table: Total Marriage Licenses Issued in February for Each Year",
+  col.names = c("Year", "February Licenses"),
+  format = "simple"
+)
+
+```
+
+```{r}
+#| label: february-plot
+#| fig-cap: "Figure 1: Total Marriage Licenses Issued in February (2011-2023)"
+#| echo: false
+#| warning: false
+#| message: false
+
+# Plot Total February Licenses Over Time
+ggplot(february_data, aes(x = year, y = february_licenses)) +
+  geom_line(color = "steelblue", size = 1) +
+  geom_point(color = "red", size = 3) +  # Optional: Add points for each year
+  labs(title = "Total Marriage Licenses Issued in February (2011-2023)",
+       x = "Year",
+       y = "Number of Licenses") +
+  theme_minimal()
+
+
+```
+
+```{r}
+#| label: monthly-totals-table
+#| fig-cap: "Table 2: Total Monthly Marriage Licenses by Year"
+#| echo: false
+#| warning: false
+#| message: false
+
+# Monthly Summary for All Months: Group data by year and month to calculate total licenses
+monthly_totals <- data %>%
+  group_by(year, month) %>%
+  summarise(total_licenses = sum(marriage_licenses))
+
+# Create a table of monthly totals by year
+knitr::kable(
+  tidyr::spread(monthly_totals, year, total_licenses),  # Reshape data to display years side by side
+  caption = "Table: Total Monthly Marriage Licenses by Year",
+  col.names = c("Month", unique(monthly_totals$year)),  # Dynamically add years as column names
+  format = "simple"
+)
+
+
+```
+
+```{r}
 #| label: total-by-civic-centre-results
 #| fig-cap: "Figure 5: Total Marriage Licenses by Civic Centre"
 #| echo: false
@@ -256,10 +323,47 @@ ggplot(total_licenses_period, aes(x = period, y = avg_monthly_licenses, fill = p
   theme_minimal() +
   scale_fill_manual(values = c("Pre-Pandemic" = "blue", "Pandemic" = "red", "Post-Pandemic" = "green"))
 
-
-
 ```
 
+```{r}
+#| label: december-table
+#| fig-cap: "Table 3: Total Marriage Licenses Issued in December for Each Year"
+#| echo: false
+#| warning: false
+#| message: false
+
+# Summarize December Data: Filter for December and calculate the total number of licenses
+december_data <- data %>%
+  filter(month == "12") %>%  # Filter for December
+  group_by(year) %>%  # Group by year
+  summarise(december_licenses = sum(marriage_licenses))  # Summarize total licenses in December
+
+# Create a table of December marriage licenses for each year
+knitr::kable(
+  december_data,
+  caption = "Table: Total Marriage Licenses Issued in December for Each Year",
+  col.names = c("Year", "December Licenses"),
+  format = "simple"
+)
+
+```
+```{r}
+#| label: december-plot
+#| fig-cap: "Figure 2: Total Marriage Licenses Issued in December (2011-2023)"
+#| echo: false
+#| warning: false
+#| message: false
+
+# Plot Total December Licenses Over Time
+ggplot(december_data, aes(x = year, y = december_licenses)) +
+  geom_line(color = "green", size = 1) +
+  geom_point(color = "red", size = 3) +  # Optional: Add points for each year
+  labs(title = "Total Marriage Licenses Issued in December (2011-2023)",
+       x = "Year",
+       y = "Number of Licenses") +
+  theme_minimal()
+
+```
 ## Civil Center Comparison
 
 ## Patterns
