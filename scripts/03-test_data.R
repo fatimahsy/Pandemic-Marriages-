@@ -9,12 +9,12 @@
 
 
 #### Workspace setup ####
-Install.packages("tidyverse")
+install.packages("tidyverse")
 library(tidyverse)
 
 
 #### Test data ####
-data <- read_csv("data?raw_data?simulated.csv")
+data <- read_csv("data/raw_data/simulated.csv")
 
 #Test for negative numbers 
 data$number_of_marriage |> min() <= 0
@@ -23,5 +23,7 @@ data$number_of_marriage |> min() <= 0
 
 all(is.na(data$number_of_marriage))
 
+#Test for date range 
+all(data$dates >= as.Date("2018-01-01") & data$dates <= as.Date("2023-12-31"))
 
 

@@ -10,6 +10,7 @@ abstract: "**IN PROGRESS**
 What was done:Marriage License data from Toronto between 2011 and 2024 was analysed to determine weather holidays influence the number of applications.  What was found: Months associated with popular holidays like February (Valentine's day) and December( Christmas), show an increase in marriage license applications. Why this matters:Understanding these patterns can help city officials anticipate changes in demand for marriage-related services and allocate resources accordingly, ensuring that civil centers are prepaered for these seasonal shifts. It also gives us an insight into how emotional and culturl influences during holidays can drive personal descisions.  "
 format: pdf
 number-sections: true
+toc: true
 bibliography: references.bib
 ---
 
@@ -18,37 +19,145 @@ bibliography: references.bib
 #| warning: false
 #| message: false
 
+# install.packages("tidyverse")
+# install.packages("ggplot2")
+# install.packages("dplyr")
+# install.packages("readr")
+# install.packages("janitor")
+# install.packages("opendatatoronto")
+# install.packages("knitr")
+# install.packages("here")
+# install.packages("kableExtra")
 library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(readr)
+library(janitor)
+library(opendatatoronto)
+library(knitr)
+library(here)
+library(kableExtra)
+
 
 data <- read_csv(here::here("data/analysis_data/analysis_data"))
 
 ```
-# Introduction 
+
+# Introduction
 
 The Data @sec-data of this paper explores the `opendatatoronto` data and outlines tools and methods used to analyze the data and some preliminary observations observed. The Results @sec-results introduces more observations found from the data analysis. The Discussion @sec-disc ties back the findings to its real world relevance. Lastly, the Conclusion @sec-concl summarizes key findings and outlines future areas of study.
 
-
-
-
 # Data {#sec-data}
 
-## Tools 
-We use @citeR and @opendata
-* `ggplot2` [@citeggplot] 
-* `dplyr` [@citedplyr] 
-* `readr` [@citereadr] 
-* `tibble` [@citetibble]
+## Tools
 
+We use @citeR and @opendata \* `ggplot2` [@citeggplot] \* `dplyr` [@citedplyr] \* `readr` [@citereadr] \* `tibble` [@citetibble]
 
-## Dataset Overview 
+## Variable Descriptions
+
+```{r}
+#| label: marriage-license-sample
+#| fig-cap: "Table 1: Variable Overview"
+#| echo: false
+#| warning: false
+#| message: false
+library(tidyverse)
+library(here)
+library(kableExtra)
+data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
+
+# Creating an overview of the data
+data_overview <- tibble(
+  Variable = c("CIVIC_CENTRE", "MARRIAGE_LICENSES", "YEAR", "MONTH", "DATE"),
+  Description = c(
+    "Code representing the civic center where the marriage license was issued",
+    "Number of marriage licenses issued in that month",
+    "Year when the marriage licenses were issued",
+    "Month when the marriage licenses were issued",
+    "Date constructed from year and month for easier time series analysis"
+  ),
+  Data_Type = c(
+    "Character",  
+    "Numeric",
+    "Integer",
+    "Integer",
+    "Date"
+  )
+)
+
+# Display the table
+knitr::kable(data_overview, format = "latex", col.names = c('Variable', 'Description', 'Data Type')) %>%
+  kable_styling(latex_options = c("hold_position", "repeat_header"), full_width = FALSE) %>%
+  column_spec(2, width = "25em")  
+
+```
+
+## Dataset Overview
+
 Some of our data is of Marriage licences (@fig-marriage) from @opendata.
 
-## Variable Descriptions 
+```{r}
+#| label: Toronto-marriages
+#| fig-cap: "Table 2: Sample of Toronto Mariage Liciences"
+#| echo: false
+#| warning: false
+#| message: false
+library(tidyverse)
+library(here)
 
-## Basic Summary Statistics of the Data 
+data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
 
-The scatter plot (@fig-marriage) displays the number of marriage licenses issued in Toronto over time, spanning from before 2015 to approximately 2025. .
+knitr::kable(
+  head(data[, c( "civic_centre", "marriage_licenses", "year", "month", "date")]), 
+  "simple", 
+  col.names = c('Civic Centre', 'Number of Marriages', 'Year', 'Month', 'Date')
+)
 
+```
+
+```{r}
+#| label: distribution-by-month
+#| fig-cap: "Figure 1: Distribution of Marriage Licenses by Month"
+#| echo: false
+#| warning: false
+#| message: false
+library(ggplot2)
+library(dplyr)
+
+data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
+# Box Plot: Distribution of Marriage Licenses by Month
+ggplot(data, aes(x = as.factor(month), y = marriage_licenses)) +
+  geom_boxplot(fill = "lightblue") +
+  labs(title = "Distribution of Marriage Licenses by Month",
+       x = "Month",
+       y = "Number of Licenses") +
+  theme_minimal()
+
+
+
+
+```
+
+```{r}
+#| label: total-by-civic-centre
+#| fig-cap: "Figure 2: Total Marriage Licenses by Civic Centre"
+#| echo: false
+#| warning: false
+#| message: false
+
+data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
+
+# Bar Plot: Total Marriage Licenses by Civic Centre
+ggplot(data, aes(x = civic_centre, y = marriage_licenses, fill = civic_centre)) +
+  stat_summary(fun = sum, geom = "bar") +
+  labs(title = "Total Marriage Licenses by Civic Centre",
+       x = "Civic Centre",
+       y = "Total Number of Licenses") +
+  theme_minimal() +
+  scale_fill_brewer(palette = "Set3") #adding a little pazazz!
+```
+
+The scatter plot (@fig-marriage) displays the number of marriage licenses issued in Toronto over time, spanning from before 2015 to approximately 2025.
 
 ```{r}
 #| label: fig-marriage
@@ -60,14 +169,102 @@ data |>
   geom_point()
 
 ```
+
 # Results {#sec-results}
 
+## Seasonal and Holiday Trends
+
+```{r}
+#| label: licenses-valentines
+#| fig-cap: "Figure 3: Marriage Licenses Over Time with Valentine's Day Highlighted"
+#| echo: false
+#| warning: false
+#| message: false
+
+# Line Plot: Marriage Licenses Over Time with Valentine's Day Highlighted
+ggplot(data, aes(x = date, y = marriage_licenses)) +
+  geom_line(color = "blue") +
+  geom_vline(xintercept = as.Date(c("2018-02-14", "2019-02-14", "2020-02-14", "2021-02-14")), 
+             linetype = "dashed", color = "red") +
+  labs(title = "Marriage Licenses Over Time with Valentine's Day Highlighted", 
+       x = "Date", 
+       y = "Number of Licenses") +
+  theme_minimal()
+
+```
+
+```{r}
+#| label: licenses-heatmap
+#| fig-cap: "Figure 4: Heatmap of Marriage Licenses by Year and Month"
+#| echo: false
+#| warning: false
+#| message: false
+
+# Heatmap: Marriage Licenses by Year and Month
+data %>%
+  mutate(month_year = format(date, "%Y-%m")) %>%
+  ggplot(aes(x = year, y = as.factor(month), fill = marriage_licenses)) +
+  geom_tile() +
+  scale_fill_gradient(low = "white", high = "steelblue") +
+  labs(title = "Heatmap of Marriage Licenses by Year and Month", 
+       x = "Year", 
+       y = "Month") +
+  theme_minimal()
+
+```
+
+```{r}
+#| label: total-by-civic-centre-results
+#| fig-cap: "Figure 5: Total Marriage Licenses by Civic Centre"
+#| echo: false
+#| warning: false
+#| message: false
+
+# Bar Plot: Total Marriage Licenses by Civic Centre
+ggplot(data, aes(x = civic_centre, y = marriage_licenses, fill = civic_centre)) +
+  stat_summary(fun = sum, geom = "bar") +
+  labs(title = "Total Marriage Licenses by Civic Centre", 
+       x = "Civic Centre", 
+       y = "Total Number of Licenses") +
+  theme_minimal() +
+  scale_fill_brewer(palette = "Set3")
+```
+
+```{r}
+#| label: avg-licenses-bar
+#| fig-cap: "Figure: Average Monthly Marriage Licenses Pre-, During-, and Post-Pandemic"
+#| echo: false
+#| warning: false
+#| message: false
+
+# Group data by period (pre-pandemic, pandemic, post-pandemic) and calculate average monthly licenses
+total_licenses_period <- data %>%
+  mutate(period = case_when(
+    date < as.Date("2020-03-01") ~ "Pre-Pandemic",
+    date >= as.Date("2020-03-01") & date <= as.Date("2021-12-31") ~ "Pandemic",
+    date > as.Date("2021-12-31") ~ "Post-Pandemic"
+  )) %>%
+  group_by(period) %>%
+  summarise(avg_monthly_licenses = mean(marriage_licenses))
+
+# Bar Plot: Average Monthly Marriage Licenses by Period
+ggplot(total_licenses_period, aes(x = period, y = avg_monthly_licenses, fill = period)) +
+  geom_bar(stat = "identity", width = 0.6) +
+  labs(title = "Average Monthly Marriage Licenses Pre-, During-, and Post-Pandemic", 
+       x = "Period", 
+       y = "Average Monthly Licenses") +
+  theme_minimal() +
+  scale_fill_manual(values = c("Pre-Pandemic" = "blue", "Pandemic" = "red", "Post-Pandemic" = "green"))
 
 
+
+```
+
+## Civil Center Comparison
+
+## Patterns
 
 # Discussion {#sec-disc}
-
-
 
 # Conclusion {#sec-concl}
 
