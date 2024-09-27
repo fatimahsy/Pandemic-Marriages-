@@ -288,14 +288,14 @@ ggplot(summer_data, aes(x = as.factor(year), y = marriage_licenses, fill = month
 ## December Licenses
 (@fig-december-plot) shows the total number of marriage licenses issued in December. The data shows that similar to other winter months, December typically experiences lower marriage license activity compared to the summer months. However, the numbers vary year by year with notable fluctuations.The graph shows relatively stable activity for most years with licenses ranging between 680-785.The highest number of licenses issued is December occurred in 2019, with a total of 855 licenses. The lowest number was recorded in 2020, during the height of the pandemic, when only 368 licenses were issued.
 
-
 ```{r}
 #| label: fig-december-plot
 #| fig-cap: "Total Marriage Licenses Issued in December (2011-2023)"
 #| echo: false
 #| warning: false
 #| message: false
-#| 
+#| fig-width: 4
+#| fig-height: 2
 # Filter for December and calculate the total number of licenses (this acts like a December summary table)
 december_data <- data %>%
   filter(month == "12") %>%  # Filter for December
@@ -312,6 +312,7 @@ ggplot(december_data, aes(x = year, y = december_licenses)) +
   theme_minimal()
 
 ```
+\newpage 
 # Discussion {#sec-disc}
 
 
