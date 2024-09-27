@@ -1,13 +1,12 @@
 ---
-title: "Seasonal Variation in Marriage License Applications"
+title: "Seasonal Variations in Marriage License Applications"
 subtitle: "An Exploratory Analysis with Open Data Toronto"
 author: 
   - Fatimah Yunusa
 thanks: "Code and data are available at: https://github.com/fatimahsy/Pandemic-Marriages-.git."
 date: today
 date-format: long
-abstract: "**IN PROGRESS**       
-What was done:Marriage License data from Toronto between 2011 and 2024 was analysed to determine whether holidays influence the number of applications.  What was found: Months associated with popular holidays like February (Valentine's day) and December( Christmas), show an increase in marriage license applications. Why this matters:Understanding these patterns can help city officials anticipate changes in demand for marriage-related services and allocate resources accordingly, ensuring that civil centers are prepaered for these seasonal shifts. It also gives us an insight into how emotional and culturl influences during holidays can drive personal descisions.  "
+abstract: "Marriage License data from Toronto between 2011 and 2024 was analysed to explore trends in marriage licience number and the influence of emotionally significant dates like valentines day & christmas on these numbers. Couples are more practical in choosing wedding dates, with significantl higher numbers of marriage liciences issued during the summer months.These results hilighthow societal traditions around marriage are shaped more by practical considerations than romantic ideals. Understanding these patterns can help city officials anticipate changes in demand for marriage-related services and allocate resources accordingly, ensuring that civil centers are prepaered for these seasonal shifts."
 format: pdf
 number-sections: true
 toc: true
@@ -46,20 +45,20 @@ data <- read_csv(here::here("data/analysis_data/analysis_data"))
 ```
 
 # Introduction
+Marriage decisions are often thought to be driven by deeply emotional and symbolic impulses, such as getting married on Valentine's Day or during the Christmas holidays. However, this paper finds that practical considerations like favorable weather and scheduling play a more significant role in choosing wedding dates. By examining marriage license data in Toronto from 2011 to 2023, this paper looks at trends in key periods such as February, the summer months, and December showing how couples tend to prioritize convenience over sentimentality, particularly favoring summer months for weddings.
 
-Marriage decisions are often driven but just in terms of practicality, but in terms of deeply emotional and sometimes irrational impulses. Symbolic dates like Valentine's Day and Christmas play a key role in this. Even during unprecedented times like the COVID-19 pandemic, love and tradition lead people to marry at significant moments, despite the logistical nightmares these choices presented. This paper examines trends in marriage licenses issued in Toronto from 2011 to 2023, with a focus on seasonal periods like February and December.
 
-Wile there have been studies showing decreases in marriage licences during global crisis, there has been little analysis on how local trends are influenced by emotionally significant dates. This paper fills that gap by examining the effect of these periods on marriage decisions in Toronto, providing information on how tradition and emotion play a part in these decisions.
+Wile there have been studies showing decreases in marriage licences during global crisis, there has been little analysis on how local trends are influenced by emotionally significant dates or practicality. This paper fills that gap by examining the effect of these periods on marriage decisions in Toronto, providing information on how tradition, emotion, and practicality play a part in these decisions.
 
-We use data analysis and various visualizations to check trends from 2011-2023 with a focus on special seasons. The findings show that while marriage licence declined significantly during the pandemic, Christmas and Valentines Day continued to see small spikes, showing that symbolic dates have some sort of power in marriage decisions.
+We use data analysis and different visualizations to examine marriage license trends from 2011 to 2023, with a focus on key seasons such as summer, Christmas, and Valentine’s Day. While marriage license issuance declined significantly during the pandemic, these symbolic dates continued to show small spikes, indicating that emotional or symbolic significance still plays a role in some marriage decisions. However, the data leans more towards suggesting that practical considerations, such as weather and scheduling, are the primary drivers of marriage planning, with the summer months consistently seeing the highest activity.
 
-Marriage trends are a very good indicator of changes in society, reflecting broader shifts in demographics, economic circumstances, and changing cultural preferences. Understanding how external factors like seasonal holidays and different disruptions to the overall society influence marriage decisions can offer us valuable insights into human behavior and societal recovery. By identifying consistent seasonal patterns, this analysis can help wedding-retated businesses (venues, caters, DJ's, etc.)anticipate periods of higher demand and better allocate resource. Additionally, civil centers can use this data to optimise staffing in order to increase efficiency.
+Marriage trends are a very good indicator of changes in society, reflecting broader shifts in demographics, economic circumstances, and changing cultural preferences. Understanding how external factors like seasonal holidays and different disruptions to the overall society influence marriage decisions can offer us valuable insights into human behavior. By identifying consistent seasonal patterns, this analysis can help wedding-related businesses (venues, caters, DJ's, etc.)anticipate periods of higher demand and better allocate resource. Additionally, civil centers can use this data to optimise staffing in order to increase efficiency.
 
-The Data @sec-data of this paper explores the `opendatatoronto` data and outlines tools and methods used to analyze the data and some preliminary observations observed. The Results @sec-results introduces more observations found from the data analysis. The Discussion @sec-disc ties back the findings to its real world relevance. Lastly, the Conclusion @sec-concl summarizes key findings and outlines future areas of study.
+The Data @sec-data of this paper explores the `opendatatoronto` data and outlines tools and methods used to analyze the data and some preliminary observations. The Results @sec-results introduces more observations found from the data analysis. The Discussion @sec-disc ties back the findings to its real world relevance and summarizes key findings and outlines future areas of study.
 
 # Data {#sec-data}
 
-The dataset for this report consist of statistics for marriage licence quantities by civic centre's in Toronto from 2011-2023. This data comes from `opendatatoronto`, a public repository that provides access to different civil datasets. These statistics were downloaded, cleaned, parsed, analysed, and visualised using R (@citeR), a statistical programming language, along with package support from `tidyverse` (@citetidyverse), various different libraries such as:
+The dataset for this report consist of statistics for marriage licence quantities by civic center's in Toronto from 2011-2023. This data comes from `opendatatoronto`, a public repository that provides access to different civil datasets. These statistics were downloaded, cleaned, parsed, analysed, and visualised using R (@citeR), a statistical programming language, along with package support from `tidyverse` (@citetidyverse), various different libraries such as:
 
 -   `ggplot2` [@citeggplot]
 -   `dplyr` [@citedplyr]
@@ -69,13 +68,23 @@ The dataset for this report consist of statistics for marriage licence quantitie
 For further cleaning, the `janitor` (@citejanitor) package was used and the `knitr` was used too.
 
 ## Variables of Interest
+ Each row represents the number of marriage licenses issued at a civic center during a given month, along with a corresponding year and a constructed date column.(@tbl-marriage-variables)describes the variables included in the dataset. These variables include:
+
+-   `civic_centre`
+-   `marriage_licenses`
+-   `time_period`
+-   `id`
+
+The data is organised by moth and aggregated for each civic center. While it would have been beneficial to have data at the daily level, the monthly data still allows for meaningful analysis of seasonal trends.
 
 ```{r}
-#| label: marriage-variables
-#| fig-cap: "Table 1: Variable Overview"
+#| label: tbl-marriage-variables
+#| tbl-cap: "Variable Overview"
 #| echo: false
 #| warning: false
 #| message: false
+
+
 library(tidyverse)
 library(here)
 library(kableExtra)
@@ -98,21 +107,12 @@ data_overview <- tibble(
   )
 )
 
-# Display the table
+# show the table
 knitr::kable(data_overview, format = "latex", col.names = c('Variable', 'Description', 'Data Type')) %>%
   kable_styling(latex_options = c("hold_position", "repeat_header"), full_width = FALSE) %>%
   column_spec(2, width = "25em")  
 
 ```
-
-The dataset has 544 rows and 6 columns. Each row represents the number of marriage licenses issued at a civic center during a given month, along with a corresponding year and a constructed date column. (@marriage-variables) describes the variables included in the dataset. These variables include:
-
--   `civic_centre`
--   `marriage_licenses`
--   `time_period`
--   `id`
-
-The data is organised by moth and aggregated for each civic center. While it would have been beneficial to have data at the daily level, the monthly data still allows for meaningful analysis of seasonal trends.
 
 ## Data cleaning 
 The raw data was cleaned to prepare it for analysis by removing columns, splitting the time information, and creating a date column. The cleaning process standardized the data making it easier to interpret. Here were the steps taken: 
@@ -124,14 +124,14 @@ The raw data was cleaned to prepare it for analysis by removing columns, splitti
 - Create date column: A new date column was constructed using the `lubridate::ymd()` function. 
 
 ## Dataset Overview
-Table 1 Shows a sample of the dataset used for the analysis of this paper. Here we can see `civic_centre` indicates the name of the civic center where the marriage licenses were issued (e.g., ET for Etobicoke, NY for North York, SC for Scarborough, and TO for Toronto).
+ (@tbl-toronto-marriages)Shows a sample of the dataset used for the analysis of this paper.The dataset has 544 rows and 6 columns. Here we can see `civic_centre` indicates the name of the civic center where the marriage licenses were issued (e.g., ET for Etobicoke, NY for North York, SC for Scarborough, and TO for Toronto).
 
-In addition to the tabular data, Figure 1 shows the overall distribution of marriage licences by month. The boxplot illustrates the seasonal trends with the number of licences peaking in the summer months, which are particularly wedding months.
+In addition to the tabular data, (@fig-distribution-by-month)shows the overall distribution of marriage licences by month. The boxplot illustrates the seasonal trends with the number of licences peaking in the summer months, which are particularly wedding months.
 
 
 ```{r}
-#| label: Toronto-marriages
-#| fig-cap: "Table 2: Sample of Toronto Marriage Licenses"
+#| label: tbl-toronto-marriages
+#| tbl-cap: "Sample of Toronto Marriage Licenses"
 #| echo: false
 #| warning: false
 #| message: false
@@ -144,10 +144,10 @@ library(here)
 # Load the raw data
 raw_data <- read_csv(here::here("data/raw_data/raw_data.csv"))
 
-# Use the head function to show the first few rows
+# show the first few rows
 sample_data <- head(raw_data)
 
-# Create a nicely formatted table using kableExtra
+# Cute table using kableExtra
 sample_data %>%
   kbl(col.names = c("ID", "Civic Centre", "Marriage Licenses", "Time Period"), 
       caption = "Sample of Toronto Marriage Licenses") %>%
@@ -156,8 +156,8 @@ sample_data %>%
 ```
 
 ```{r}
-#| label: distribution-by-month
-#| fig-cap: "Figure 1: Distribution of Marriage Licenses by Month"
+#| label: fig-distribution-by-month
+#| fig-cap: "Distribution of Marriage Licenses by Month"
 #| echo: false
 #| warning: false
 #| message: false
@@ -165,7 +165,9 @@ library(ggplot2)
 library(dplyr)
 
 data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
-# Box Plot: Distribution of Marriage Licenses by Month
+
+
+# Making a Box Plot to show  Distribution of Marriage Licenses by Month
 ggplot(data, aes(x = as.factor(month), y = marriage_licenses)) +
   geom_boxplot(fill = "lightblue") +
   labs(title = "Distribution of Marriage Licenses by Month",
@@ -176,15 +178,15 @@ ggplot(data, aes(x = as.factor(month), y = marriage_licenses)) +
 ```
 
 ```{r}
-#| label: total-by-civic-centre
-#| fig-cap: "Figure 2: Total Marriage Licenses by Civic Centre"
+#| label: fig-total-by-civic-centre
+#| fig-cap: "Total Marriage Licenses by Civic Centre"
 #| echo: false
 #| warning: false
 #| message: false
 
 data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
 
-# Bar Plot: Total Marriage Licenses by Civic Centre
+# Making a Bar Plot to show Total Marriage Licenses by Civic Centre
 ggplot(data, aes(x = civic_centre, y = marriage_licenses, fill = civic_centre)) +
   stat_summary(fun = sum, geom = "bar") +
   labs(title = "Total Marriage Licenses by Civic Centre",
@@ -193,20 +195,7 @@ ggplot(data, aes(x = civic_centre, y = marriage_licenses, fill = civic_centre)) 
   theme_minimal() +
   scale_fill_brewer(palette = "Set3") #adding a little pazazz!
 ```
-Figure 2 shows a breakdown of the total marriage licenses issued by each center from 2011-2023. Toronto issued the highest number of licences with over 90,000 licenses across the period, followed by North York, Scarborough and Etobicoke. The major disparity in marriage license counts across centers can mainly be attributed to differences in population density and geographical location. Toronto as the central and most densely populated area, attracts the largest number of couples applying for marriage licenses. 
-
-
-```{r}
-#| label: fig-marriage
-#| fig-cap: Marriage Licinces By Date
-#| echo: false
-
-data |> 
-  ggplot(aes(x = date, y = marriage_licenses)) +
-  geom_point()
-
-```
-The scatter plot (@fig-marriage) displays the number of marriage licenses issued in Toronto over time, spanning from before 2011 to approximately 2025.Each point represents the number of liciences issued in a specific month. the scatter plot illustrates both the overall distribution of licenses over time and any significant deviations or disruptions to typical patterns.  
+ (@fig-total-by-civic-centre)shows a breakdown of the total marriage licenses issued by each center from 2011-2023. Toronto issued the highest number of licences with over 90,000 licenses across the period, followed by North York, Scarborough and Etobicoke. The major disparity in marriage license counts across centers can mainly be attributed to differences in population density and geographical location. Toronto as the central and most densely populated area, attracts the largest number of couples applying for marriage licenses. 
 
 
 
@@ -214,13 +203,13 @@ The scatter plot (@fig-marriage) displays the number of marriage licenses issued
 
 ## Licenses by Year and Month
 ```{r}
-#| label: licenses-heatmap
-#| fig-cap: "Figure 4: Heatmap of Marriage Licenses by Year and Month"
+#| label: fig-licenses-heatmap
+#| fig-cap: "Heatmap of Marriage Licenses by Year and Month"
 #| echo: false
 #| warning: false
 #| message: false
 
-# Heatmap: Marriage Licenses by Year and Month
+# Making a Heatmap for Marriage Licenses by Year and Month
 data %>%
   mutate(month_year = format(date, "%Y-%m")) %>%
   ggplot(aes(x = year, y = as.factor(month), fill = marriage_licenses)) +
@@ -232,115 +221,109 @@ data %>%
   theme_minimal()
 
 ```
-Figure 4 shows a heatmap of the distribution of marriage licenses issued by month and year from 2022 to 2024. The x-axis represents years and the y-axis represents the months. The colour gradient illustrates the number of marriage licenses issued, with the darker shades representing more licenses issued. Higher volumes of marriage licenses are typically observed during the summer months(June-August) across all years, as shown by the darker shades on the heatmap. Winter months tend to have fewer marriage licenses issued. In 2020, there was a clear drop in the number of licences, particularly during the months that typically see the most activity. 
+(@fig-licenses-heatmap) shows a heatmap of the distribution of marriage licenses issued by month and year from 2022 to 2024. The x-axis represents years and the y-axis represents the months. The colour gradient illustrates the number of marriage licenses issued, with the darker shades representing more licenses issued. Higher volumes of marriage licenses are typically observed during the summer months(June-August) across all years, as shown by the darker shades on the heatmap. Winter months tend to have fewer marriage licenses issued. In 2020, there was a clear drop in the number of licences, particularly during the months that typically see the most activity. 
 
 
 ## Valentines Day Licenses
 
-Table 3 shows the total number of marriage licenses issued in February for each year between 2011-2024.Contrary to my earlier belief, February is typically a low-activity month for marriage license, with most years seeing less than 900 licenses issued. However, in 2020, 908 licenses were issued in February, the ost in the whole period. They year 2021 shows a significant drop in licenses, with only 535 licenses issued, reflecting the ongoing impact of the COVID-19 pandemic. By 2024, the number of february licenses reached 993, the highest for any February in the dataset, indicating a recovery and potential resurgence in wedding activity during this month.  
+(@tbl-february-table)shows the total number of marriage licenses issued in February for each year between 2011-2024.Contrary to my earlier belief, February is typically a low-activity month for marriage license, with most years seeing less than 900 licenses issued. However, in 2020, 908 licenses were issued in February, the ost in the whole period. They year 2021 shows a significant drop in licenses, with only 535 licenses issued, reflecting the ongoing impact of the COVID-19 pandemic. By 2024, the number of february licenses reached 993, the highest for any February in the dataset, indicating a recovery and potential resurgence in wedding activity during this month.  
 
 ```{r}
-#| label: february-table
-#| fig-cap: "Total Marriage Licenses Issued in February for Each Year"
+#| label: tbl-february-table
+#| tbl-cap: "Total Marriage Licenses Issued in February for Each Year"
 #| echo: false
 #| warning: false
 #| message: false
 
-# Summarize February Data: Filter for February and calculate the total number of licenses
+# Filter for February and calculate the total number of licenses
 february_data <- data %>%
-  filter(month == "02") %>%  # Filter for February
-  group_by(year) %>%  # Group by year
+  filter(month == "02") %>%  # Filter for February Onlyy
+  group_by(year) %>%  # Group by the year
   summarise(february_licenses = sum(marriage_licenses))  # Summarize total licenses in February
 
 # Create a table of February marriage licenses for each year
 knitr::kable(
   february_data,
-  caption = "Table: Total Marriage Licenses Issued in February for Each Year",
+  caption = "Total Marriage Licenses Issued in February for Each Year",
   col.names = c("Year", "February Licenses"),
   format = "simple"
 )
 
 ```
 
-
-## Pre,During & Post Pandemic Licenses
+## Summer Licenses
+(@fig-summer-months-barplot) presents the number of marriage licenses issued during the summer months(June, July, and August) for each year from 2011 to 2023. Each year is divided into 3 bars for each summer month, showing the distribution licenses within the summer sessions. July consistently has the highest number of marriage licenses issued compared to June and August, particularly in 2021 and 2022 where it reached over 2,500 licenses. 2020 shows a drop in marriage licenses with all three months experiencing reduced activity. July still led in numbers that year. A recovery period can be seen in 2021 and 2022 where the number of licenses exceeded pre pandemic levels. Generally, these months have higher numbers that other months in the calender. 
 ```{r}
-#| label: avg-licenses-bar
-#| fig-cap: "Figure: Average Monthly Marriage Licenses Pre-, During-, and Post-Pandemic"
+#| label: fig-summer-months-barplot
+#| fig-cap: "Total Marriage Licenses Issued in Summer Months from 2011-2023"
 #| echo: false
 #| warning: false
 #| message: false
 
-# Group data by period (pre-pandemic, pandemic, post-pandemic) and calculate average monthly licenses
-total_licenses_period <- data %>%
-  mutate(period = case_when(
-    date < as.Date("2020-03-01") ~ "Pre-Pandemic",
-    date >= as.Date("2020-03-01") & date <= as.Date("2021-12-31") ~ "Pandemic",
-    date > as.Date("2021-12-31") ~ "Post-Pandemic"
-  )) %>%
-  group_by(period) %>%
-  summarise(avg_monthly_licenses = mean(marriage_licenses))
+# Load necessary libraries
+library(tidyverse)
+library(lubridate)
 
-# Bar Plot: Average Monthly Marriage Licenses by Period
-ggplot(total_licenses_period, aes(x = period, y = avg_monthly_licenses, fill = period)) +
-  geom_bar(stat = "identity", width = 0.6) +
-  labs(title = "Average Monthly Marriage Licenses Pre-, During-, and Post-Pandemic", 
-       x = "Period", 
-       y = "Average Monthly Licenses") +
+# Filter the data for summer months (June, July, August)
+summer_data <- data %>%
+  filter(month %in% c("06", "07", "08"))
+
+# Create a bar plot to show the number of marriage licenses given out  during summer months
+ggplot(summer_data, aes(x = as.factor(year), y = marriage_licenses, fill = month)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = c("06" = "orange", "07" = "brown", "08" = "blue"), 
+                    labels = c("June", "July", "August")) +
+  labs(
+    title = "Marriage Licenses Issued in Summer Months from 2011-2023",
+    x = "Year",
+    y = "Number of Licenses",
+    fill = "Month"
+  ) +
   theme_minimal() +
-  scale_fill_manual(values = c("Pre-Pandemic" = "blue", "Pandemic" = "red", "Post-Pandemic" = "green"))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ```
-Figure 5 shows the average number of licenses issued per month during three distinct periods: pre-pandemic, pandemic & post-pandemic.Before the pandemic(2011-2019),there was an average of approximately 300 licenses issued per mont. During the pandemic, the red bar on the graph shows a significant drop in the average monthly licenses with approximately 450 licenses issued monthly. This reflects the overall decline in marriage due pandemic-related restrictions and disruptions. The green bar represents the post-pandemic period, showing an increase in marriage licenses issued with an average of 700 licenses per month. This suggest a rebound in normal activities. This hart clearly shows the disruption caused by the pandemic as well as later recovery in the following years, with post-pandemic averages exceeding pre-pandemic averages. 
 
 ## December Licenses
+(@fig-december-plot) shows the total number of marriage licenses issued in December. The data shows that similar to other winter months, December typically experiences lower marriage license activity compared to the summer months. However, the numbers vary year by year with notable fluctuations.The graph shows relatively stable activity for most years with licenses ranging between 680-785.The highest number of licenses issued is December occurred in 2019, with a total of 855 licenses. The lowest number was recorded in 2020, during the height of the pandemic, when only 368 licenses were issued.
+
+
 ```{r}
-#| label: december-table
-#| fig-cap: "Table 3: Total Marriage Licenses Issued in December for Each Year"
+#| label: fig-december-plot
+#| fig-cap: "Total Marriage Licenses Issued in December (2011-2023)"
 #| echo: false
 #| warning: false
 #| message: false
-
-# Summarize December Data: Filter for December and calculate the total number of licenses
+#| 
+# Filter for December and calculate the total number of licenses (this acts like a December summary table)
 december_data <- data %>%
   filter(month == "12") %>%  # Filter for December
   group_by(year) %>%  # Group by year
   summarise(december_licenses = sum(marriage_licenses))  # Summarize total licenses in December
 
-# Create a table of December marriage licenses for each year
-knitr::kable(
-  december_data,
-  caption = "Table: Total Marriage Licenses Issued in December for Each Year",
-  col.names = c("Year", "December Licenses"),
-  format = "simple"
-)
-
-```
-
-```{r}
-#| label: december-plot
-#| fig-cap: "Figure 2: Total Marriage Licenses Issued in December (2011-2023)"
-#| echo: false
-#| warning: false
-#| message: false
-
 # Plot Total December Licenses Over Time
 ggplot(december_data, aes(x = year, y = december_licenses)) +
   geom_line(color = "green", size = 1) +
-  geom_point(color = "red", size = 3) +  # Optional: Add points for each year
+  geom_point(color = "red", size = 3)
   labs(title = "Total Marriage Licenses Issued in December (2011-2023)",
        x = "Year",
        y = "Number of Licenses") +
   theme_minimal()
 
 ```
-
-
-## Patterns
-
 # Discussion {#sec-disc}
 
-# Conclusion {#sec-concl}
+
+Using Data about marriage licenses in Toronto, this paper tries to to see if there is a visible pattern that can suggest that people get married based on emotions or practicality. It focuses on emotionally significant dates like Valentines day, Christmas, and summer. The findings reveal that practical considerations, like weather and guest availability tend to outweigh emotional or sentimental motivations as seen in  @sec-results. There are consistent increases during the summer months compared to the relatively lower numbers on Valentine's Day or during the Winter. 
+
+These results challenge the assumption that romantic or symbolic dates drive marriage decisions, suggesting instead that couples tend to prioritize practicality when planning their weddings. 
+
+One of the clearest patters shown from the data is the overwhelming preference for summer months when it comes t getting married. Across all years, these moths far exceed other months. This is largely attributed to the fact that during summer, logistics are much easier to work out. People are able to have weddings outside which is usually preferred. People also do not have to worry about bad weather like snow storms or heavy wind. Having a wedding during the summer also makes pictures look better since the sun is shining pretty well. In terms of guest availability, summer is usually optimal because there is no school, and many people take time off work. 
+Even thought dates like valentines day hold cultural and romantic significance, they do not show a corresponding increase in marriage activity. This indicates that while couples may enjoy celebrating love or symbolic days, their wedding planning is more practically driven by factors like convenience, weather, and timing. 
+
+While the findings offer important insights into marriage license trends, there are a few limitations. First, the analysis is restricted to marriage license data which does not account for actual ceremonies or couples' personal motivations for choosing specific dates. While the data clearly shows summer dates are more popular, it cannot directly explain why couples make these decisions or weather other factors like venue availability or budget considerations play a role. Additionally, the dataset does not include demographic information like age, income, race or cultural background which could help provide a better understanding of why certain groups might favour particular wedding dates. 
+
+Future studies could have more of a focus on the part economic factors play in marriage licence number.For example how does the cost of weddings or affordability of venues influence marriage licence data? Cross-regional comparisons could also show some valuable trends. Researchers could look into whether these practical considerations are consistent across different regions of if local traditions, economic conditions, or cultural preferences influence wedding planning. 
 
 \`\`\`
 
@@ -363,9 +346,9 @@ monthly_totals <- data %>%
 
 # Create a table of monthly totals by year
 knitr::kable(
-  tidyr::spread(monthly_totals, year, total_licenses),  # Reshape data to display years side by side
+  tidyr::spread(monthly_totals, year, total_licenses),  # Reshape data to display years side by side for better visuals.
   caption = "Table: Total Monthly Marriage Licenses by Year",
-  col.names = c("Month", unique(monthly_totals$year)),  # Dynamically add years as column names
+  col.names = c("Month", unique(monthly_totals$year)),
   format = "simple"
 )
 
