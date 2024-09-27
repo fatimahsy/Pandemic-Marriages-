@@ -7,7 +7,7 @@ thanks: "Code and data are available at: https://github.com/fatimahsy/Pandemic-M
 date: today
 date-format: long
 abstract: "**IN PROGRESS**       
-What was done:Marriage License data from Toronto between 2011 and 2024 was analysed to determine weather holidays influence the number of applications.  What was found: Months associated with popular holidays like February (Valentine's day) and December( Christmas), show an increase in marriage license applications. Why this matters:Understanding these patterns can help city officials anticipate changes in demand for marriage-related services and allocate resources accordingly, ensuring that civil centers are prepaered for these seasonal shifts. It also gives us an insight into how emotional and culturl influences during holidays can drive personal descisions.  "
+What was done:Marriage License data from Toronto between 2011 and 2024 was analysed to determine whether holidays influence the number of applications.  What was found: Months associated with popular holidays like February (Valentine's day) and December( Christmas), show an increase in marriage license applications. Why this matters:Understanding these patterns can help city officials anticipate changes in demand for marriage-related services and allocate resources accordingly, ensuring that civil centers are prepaered for these seasonal shifts. It also gives us an insight into how emotional and culturl influences during holidays can drive personal descisions.  "
 format: pdf
 number-sections: true
 toc: true
@@ -46,6 +46,18 @@ data <- read_csv(here::here("data/analysis_data/analysis_data"))
 ```
 
 # Introduction
+Marriage decisions are often driven but just in terms of practicality, but in terms of deeply emotional and sometimes irrational impulses. Symbolic dates like Valentine's Day and Christmas play a key role in this. Even during unprecedented times like the COVID-19 pandemic, love and tradition lead people to marry at significant moments, despite the logistical nightmares these choices presented. This paper examines trends in marriage licenses issued in Toronto from 2011 to 2023, with a focus on seasonal periods like February and December. 
+
+Wile there have been studies showing decreases in marriage licences during global crisis, there has been little analysis on how local trends are influenced by emotionally significant dates. This paper fills that gap by examining the effect of these periods on marriage decisions in Toronto, providing information on how tradition and emotion play a part in these decisions. 
+
+We use data analysis and various visualizations to check trends from 2011-2023 with a focus on special seasons. The findings show that while marriage licence declined significantly during the pandemic, Christmas and Valentines Day continued to see small spikes, showing that symbolic dates have some sort of power in marriage decisions. 
+
+
+Marriage trends are a very good indicator of changes in society, reflecting broader shifts in demographics, economic circumstances, and changing cultural preferences. Understanding how external factors like seasonal holidays and different disruptions to the overall society influence marriage decisions can offer us valuable insights into human behavior and societal recovery. By identifying consistent seasonal patterns, this analysis can help wedding-retalted businesses (venues, caters, DJ's, etc.)anticipate periods of higher demand and better allocate resource. Additionally, civil centers can use this data to optimise staffing in order to increase efficiency. 
+
+
+
+
 
 The Data @sec-data of this paper explores the `opendatatoronto` data and outlines tools and methods used to analyze the data and some preliminary observations observed. The Results @sec-results introduces more observations found from the data analysis. The Discussion @sec-disc ties back the findings to its real world relevance. Lastly, the Conclusion @sec-concl summarizes key findings and outlines future areas of study.
 
