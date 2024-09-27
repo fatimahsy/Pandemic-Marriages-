@@ -46,28 +46,29 @@ data <- read_csv(here::here("data/analysis_data/analysis_data"))
 ```
 
 # Introduction
-Marriage decisions are often driven but just in terms of practicality, but in terms of deeply emotional and sometimes irrational impulses. Symbolic dates like Valentine's Day and Christmas play a key role in this. Even during unprecedented times like the COVID-19 pandemic, love and tradition lead people to marry at significant moments, despite the logistical nightmares these choices presented. This paper examines trends in marriage licenses issued in Toronto from 2011 to 2023, with a focus on seasonal periods like February and December. 
 
-Wile there have been studies showing decreases in marriage licences during global crisis, there has been little analysis on how local trends are influenced by emotionally significant dates. This paper fills that gap by examining the effect of these periods on marriage decisions in Toronto, providing information on how tradition and emotion play a part in these decisions. 
+Marriage decisions are often driven but just in terms of practicality, but in terms of deeply emotional and sometimes irrational impulses. Symbolic dates like Valentine's Day and Christmas play a key role in this. Even during unprecedented times like the COVID-19 pandemic, love and tradition lead people to marry at significant moments, despite the logistical nightmares these choices presented. This paper examines trends in marriage licenses issued in Toronto from 2011 to 2023, with a focus on seasonal periods like February and December.
 
-We use data analysis and various visualizations to check trends from 2011-2023 with a focus on special seasons. The findings show that while marriage licence declined significantly during the pandemic, Christmas and Valentines Day continued to see small spikes, showing that symbolic dates have some sort of power in marriage decisions. 
+Wile there have been studies showing decreases in marriage licences during global crisis, there has been little analysis on how local trends are influenced by emotionally significant dates. This paper fills that gap by examining the effect of these periods on marriage decisions in Toronto, providing information on how tradition and emotion play a part in these decisions.
 
+We use data analysis and various visualizations to check trends from 2011-2023 with a focus on special seasons. The findings show that while marriage licence declined significantly during the pandemic, Christmas and Valentines Day continued to see small spikes, showing that symbolic dates have some sort of power in marriage decisions.
 
-Marriage trends are a very good indicator of changes in society, reflecting broader shifts in demographics, economic circumstances, and changing cultural preferences. Understanding how external factors like seasonal holidays and different disruptions to the overall society influence marriage decisions can offer us valuable insights into human behavior and societal recovery. By identifying consistent seasonal patterns, this analysis can help wedding-retalted businesses (venues, caters, DJ's, etc.)anticipate periods of higher demand and better allocate resource. Additionally, civil centers can use this data to optimise staffing in order to increase efficiency. 
-
-
-
-
+Marriage trends are a very good indicator of changes in society, reflecting broader shifts in demographics, economic circumstances, and changing cultural preferences. Understanding how external factors like seasonal holidays and different disruptions to the overall society influence marriage decisions can offer us valuable insights into human behavior and societal recovery. By identifying consistent seasonal patterns, this analysis can help wedding-retated businesses (venues, caters, DJ's, etc.)anticipate periods of higher demand and better allocate resource. Additionally, civil centers can use this data to optimise staffing in order to increase efficiency.
 
 The Data @sec-data of this paper explores the `opendatatoronto` data and outlines tools and methods used to analyze the data and some preliminary observations observed. The Results @sec-results introduces more observations found from the data analysis. The Discussion @sec-disc ties back the findings to its real world relevance. Lastly, the Conclusion @sec-concl summarizes key findings and outlines future areas of study.
 
 # Data {#sec-data}
 
-## Tools
+The dataset for this report consist of statistics for marriage licence quantities by civic centre's in Toronto from 2011-2023. This data comes from `opendatatoronto`, a public repository that provides access to different civil datasets. These statistics were downloaded, cleaned, parsed, analysed, and visualised using R (@citeR), a statistical programming language, along with package support from `tidyverse` (@citetidyverse), various different libraries such as:
 
-We use @citeR and @opendata \* `ggplot2` [@citeggplot] \* `dplyr` [@citedplyr] \* `readr` [@citereadr] \* `tibble` [@citetibble]
+-   `ggplot2` [@citeggplot]
+-   `dplyr` [@citedplyr]
+-   `readr` [@citereadr]
+-   `tibble` [@citetibble]
 
-## Variable Descriptions
+For further cleaning, the `janitor` (@citejanitor) package was used and the `knitr` was used too.
+
+## Variables of Interest
 
 ```{r}
 #| label: marriage-license-sample
@@ -105,6 +106,17 @@ knitr::kable(data_overview, format = "latex", col.names = c('Variable', 'Descrip
   column_spec(2, width = "25em")  
 
 ```
+
+The dataset has 544 rows and 6 columns. Each row represents the number of marriage licenses issued at a civic center during a given month, along with a corresponding year and a constructed date column. @tbl-marriage-license-sample describes the variables included in the dataset. These variables include: 
+
+- `civic_centre` 
+- `marriage_licenses`
+- `year`
+- `month`
+- `date`
+
+The data is organised by moth and aggregated for each civic center. While it would have been benefitial to have data at the daily level, the monthy data still allows for meaningful analysis of seasonal trends. 
+
 
 ## Dataset Overview
 
@@ -359,6 +371,7 @@ knitr::kable(
 )
 
 ```
+
 ```{r}
 #| label: december-plot
 #| fig-cap: "Figure 2: Total Marriage Licenses Issued in December (2011-2023)"
@@ -376,6 +389,7 @@ ggplot(december_data, aes(x = year, y = december_licenses)) +
   theme_minimal()
 
 ```
+
 ## Civil Center Comparison
 
 ## Patterns
