@@ -71,7 +71,7 @@ For further cleaning, the `janitor` (@citejanitor) package was used and the `kni
 ## Variables of Interest
 
 ```{r}
-#| label: marriage-license-sample
+#| label: marriage-variables
 #| fig-cap: "Table 1: Variable Overview"
 #| echo: false
 #| warning: false
@@ -83,20 +83,18 @@ data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
 
 # Creating an overview of the data
 data_overview <- tibble(
-  Variable = c("CIVIC_CENTRE", "MARRIAGE_LICENSES", "YEAR", "MONTH", "DATE"),
+  Variable = c("CIVIC_CENTRE", "MARRIAGE_LICENSES", "TIME_PERIOD", "ID" ),
   Description = c(
     "Code representing the civic center where the marriage license was issued",
     "Number of marriage licenses issued in that month",
-    "Year when the marriage licenses were issued",
-    "Month when the marriage licenses were issued",
-    "Date constructed from year and month for easier time series analysis"
+    "The year and month when the licenses were issued, formatted as YYYY-MM",
+    "A unique identifier for each record"
   ),
   Data_Type = c(
     "Character",  
     "Numeric",
-    "Integer",
-    "Integer",
-    "Date"
+    "Date",
+    "Numeric"
   )
 )
 
@@ -107,38 +105,54 @@ knitr::kable(data_overview, format = "latex", col.names = c('Variable', 'Descrip
 
 ```
 
-The dataset has 544 rows and 6 columns. Each row represents the number of marriage licenses issued at a civic center during a given month, along with a corresponding year and a constructed date column. @tbl-marriage-license-sample describes the variables included in the dataset. These variables include: 
+The dataset has 544 rows and 6 columns. Each row represents the number of marriage licenses issued at a civic center during a given month, along with a corresponding year and a constructed date column. (@marriage-variables) describes the variables included in the dataset. These variables include:
 
-- `civic_centre` 
-- `marriage_licenses`
-- `year`
-- `month`
-- `date`
+-   `civic_centre`
+-   `marriage_licenses`
+-   `time_period`
+-   `id`
 
-The data is organised by moth and aggregated for each civic center. While it would have been benefitial to have data at the daily level, the monthy data still allows for meaningful analysis of seasonal trends. 
+The data is organised by moth and aggregated for each civic center. While it would have been beneficial to have data at the daily level, the monthly data still allows for meaningful analysis of seasonal trends.
 
+## Data cleaning 
+The raw data was cleaned to prepare it for analysis by removing columns, splitting the time information, and creating a date column. The cleaning process standardized the data making it easier to interpret. Here were the steps taken: 
+
+-  Rename Columns:Column names were standardized using `clean_names()` for consistency.
+   
+- Split time_period into year and month: The time_period column, originally formatted as YYYY-MM, was split into separate year and month columns for easier manipulation.
+
+- Create date column: A new date column was constructed using the `lubridate::ymd()` function. 
 
 ## Dataset Overview
+Table 1 Shows a sample of the dataset used for the analysis of this paper. Here we can see `civic_centre` indicates the name of the civic center where the marriage licenses were issued (e.g., ET for Etobicoke, NY for North York, SC for Scarborough, and TO for Toronto).
 
-Some of our data is of Marriage licences (@fig-marriage) from @opendata.
+In addition to the tabular data, Figure 1 shows the overall distribution of marriage licences by month. The boxplot illustrates the seasonal trends with the number of licences peaking in the summer months, which are particularly wedding months.
+
 
 ```{r}
 #| label: Toronto-marriages
-#| fig-cap: "Table 2: Sample of Toronto Mariage Liciences"
+#| fig-cap: "Table 2: Sample of Toronto Marriage Licenses"
 #| echo: false
 #| warning: false
 #| message: false
+
 library(tidyverse)
+library(knitr)
+library(kableExtra)
 library(here)
 
-data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
+# Load the raw data
+raw_data <- read_csv(here::here("data/raw_data/raw_data.csv"))
 
-knitr::kable(
-  head(data[, c( "civic_centre", "marriage_licenses", "year", "month", "date")]), 
-  "simple", 
-  col.names = c('Civic Centre', 'Number of Marriages', 'Year', 'Month', 'Date')
-)
+# Use the head function to show the first few rows
+sample_data <- head(raw_data)
 
+# Create a nicely formatted table using kableExtra
+sample_data %>%
+  kbl(col.names = c("ID", "Civic Centre", "Marriage Licenses", "Time Period"), 
+      caption = "Sample of Toronto Marriage Licenses") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), 
+                full_width = F)
 ```
 
 ```{r}
@@ -158,9 +172,6 @@ ggplot(data, aes(x = as.factor(month), y = marriage_licenses)) +
        x = "Month",
        y = "Number of Licenses") +
   theme_minimal()
-
-
-
 
 ```
 
@@ -182,8 +193,8 @@ ggplot(data, aes(x = civic_centre, y = marriage_licenses, fill = civic_centre)) 
   theme_minimal() +
   scale_fill_brewer(palette = "Set3") #adding a little pazazz!
 ```
+Figure 2 shows a breakdown of the total marriage licenses issued by each center from 2011-2023. Toronto issued the highest number of licences with over 90,000 licenses across the period, followed by North York, Scarborough and Etobicoke. The major disparity in marriage license counts across centers can mainly be attributed to differences in population density and geographical location. Toronto as the central and most densely populated area, attracts the largest number of couples applying for marriage licenses. 
 
-The scatter plot (@fig-marriage) displays the number of marriage licenses issued in Toronto over time, spanning from before 2015 to approximately 2025.
 
 ```{r}
 #| label: fig-marriage
@@ -195,30 +206,13 @@ data |>
   geom_point()
 
 ```
+The scatter plot (@fig-marriage) displays the number of marriage licenses issued in Toronto over time, spanning from before 2011 to approximately 2025.Each point represents the number of liciences issued in a specific month. the scatter plot illustrates both the overall distribution of licenses over time and any significant deviations or disruptions to typical patterns.  
+
+
 
 # Results {#sec-results}
 
-## Seasonal and Holiday Trends
-
-```{r}
-#| label: licenses-valentines
-#| fig-cap: "Figure 3: Marriage Licenses Over Time with Valentine's Day Highlighted"
-#| echo: false
-#| warning: false
-#| message: false
-
-# Line Plot: Marriage Licenses Over Time with Valentine's Day Highlighted
-ggplot(data, aes(x = date, y = marriage_licenses)) +
-  geom_line(color = "blue") +
-  geom_vline(xintercept = as.Date(c("2018-02-14", "2019-02-14", "2020-02-14", "2021-02-14")), 
-             linetype = "dashed", color = "red") +
-  labs(title = "Marriage Licenses Over Time with Valentine's Day Highlighted", 
-       x = "Date", 
-       y = "Number of Licenses") +
-  theme_minimal()
-
-```
-
+## Licenses by Year and Month
 ```{r}
 #| label: licenses-heatmap
 #| fig-cap: "Figure 4: Heatmap of Marriage Licenses by Year and Month"
@@ -238,10 +232,16 @@ data %>%
   theme_minimal()
 
 ```
+Figure 4 shows a heatmap of the distribution of marriage licenses issued by month and year from 2022 to 2024. The x-axis represents years and the y-axis represents the months. The colour gradient illustrates the number of marriage licenses issued, with the darker shades representing more licenses issued. Higher volumes of marriage licenses are typically observed during the summer months(June-August) across all years, as shown by the darker shades on the heatmap. Winter months tend to have fewer marriage licenses issued. In 2020, there was a clear drop in the number of licences, particularly during the months that typically see the most activity. 
+
+
+## Valentines Day Licenses
+
+Table 3 shows the total number of marriage licenses issued in February for each year between 2011-2024.Contrary to my earlier belief, February is typically a low-activity month for marriage license, with most years seeing less than 900 licenses issued. However, in 2020, 908 licenses were issued in February, the ost in the whole period. They year 2021 shows a significant drop in licenses, with only 535 licenses issued, reflecting the ongoing impact of the COVID-19 pandemic. By 2024, the number of february licenses reached 993, the highest for any February in the dataset, indicating a recovery and potential resurgence in wedding activity during this month.  
 
 ```{r}
 #| label: february-table
-#| fig-cap: "Table 1: Total Marriage Licenses Issued in February for Each Year"
+#| fig-cap: "Total Marriage Licenses Issued in February for Each Year"
 #| echo: false
 #| warning: false
 #| message: false
@@ -262,65 +262,8 @@ knitr::kable(
 
 ```
 
-```{r}
-#| label: february-plot
-#| fig-cap: "Figure 1: Total Marriage Licenses Issued in February (2011-2023)"
-#| echo: false
-#| warning: false
-#| message: false
 
-# Plot Total February Licenses Over Time
-ggplot(february_data, aes(x = year, y = february_licenses)) +
-  geom_line(color = "steelblue", size = 1) +
-  geom_point(color = "red", size = 3) +  # Optional: Add points for each year
-  labs(title = "Total Marriage Licenses Issued in February (2011-2023)",
-       x = "Year",
-       y = "Number of Licenses") +
-  theme_minimal()
-
-
-```
-
-```{r}
-#| label: monthly-totals-table
-#| fig-cap: "Table 2: Total Monthly Marriage Licenses by Year"
-#| echo: false
-#| warning: false
-#| message: false
-
-# Monthly Summary for All Months: Group data by year and month to calculate total licenses
-monthly_totals <- data %>%
-  group_by(year, month) %>%
-  summarise(total_licenses = sum(marriage_licenses))
-
-# Create a table of monthly totals by year
-knitr::kable(
-  tidyr::spread(monthly_totals, year, total_licenses),  # Reshape data to display years side by side
-  caption = "Table: Total Monthly Marriage Licenses by Year",
-  col.names = c("Month", unique(monthly_totals$year)),  # Dynamically add years as column names
-  format = "simple"
-)
-
-
-```
-
-```{r}
-#| label: total-by-civic-centre-results
-#| fig-cap: "Figure 5: Total Marriage Licenses by Civic Centre"
-#| echo: false
-#| warning: false
-#| message: false
-
-# Bar Plot: Total Marriage Licenses by Civic Centre
-ggplot(data, aes(x = civic_centre, y = marriage_licenses, fill = civic_centre)) +
-  stat_summary(fun = sum, geom = "bar") +
-  labs(title = "Total Marriage Licenses by Civic Centre", 
-       x = "Civic Centre", 
-       y = "Total Number of Licenses") +
-  theme_minimal() +
-  scale_fill_brewer(palette = "Set3")
-```
-
+## Pre,During & Post Pandemic Licenses
 ```{r}
 #| label: avg-licenses-bar
 #| fig-cap: "Figure: Average Monthly Marriage Licenses Pre-, During-, and Post-Pandemic"
@@ -348,7 +291,9 @@ ggplot(total_licenses_period, aes(x = period, y = avg_monthly_licenses, fill = p
   scale_fill_manual(values = c("Pre-Pandemic" = "blue", "Pandemic" = "red", "Post-Pandemic" = "green"))
 
 ```
+Figure 5 shows the average number of licenses issued per month during three distinct periods: pre-pandemic, pandemic & post-pandemic.Before the pandemic(2011-2019),there was an average of approximately 300 licenses issued per mont. During the pandemic, the red bar on the graph shows a significant drop in the average monthly licenses with approximately 450 licenses issued monthly. This reflects the overall decline in marriage due pandemic-related restrictions and disruptions. The green bar represents the post-pandemic period, showing an increase in marriage licenses issued with an average of 700 licenses per month. This suggest a rebound in normal activities. This hart clearly shows the disruption caused by the pandemic as well as later recovery in the following years, with post-pandemic averages exceeding pre-pandemic averages. 
 
+## December Licenses
 ```{r}
 #| label: december-table
 #| fig-cap: "Table 3: Total Marriage Licenses Issued in December for Each Year"
@@ -390,7 +335,6 @@ ggplot(december_data, aes(x = year, y = december_licenses)) +
 
 ```
 
-## Civil Center Comparison
 
 ## Patterns
 
@@ -405,5 +349,26 @@ ggplot(december_data, aes(x = year, y = december_licenses)) +
 \appendix
 
 # Appendix {.unnumbered}
+```{r}
+#| label: monthly-totals-table
+#| fig-cap: "Total Monthly Marriage Licenses by Year"
+#| echo: false
+#| warning: false
+#| message: false
 
+# Monthly Summary for All Months: Group data by year and month to calculate total licenses
+monthly_totals <- data %>%
+  group_by(year, month) %>%
+  summarise(total_licenses = sum(marriage_licenses))
+
+# Create a table of monthly totals by year
+knitr::kable(
+  tidyr::spread(monthly_totals, year, total_licenses),  # Reshape data to display years side by side
+  caption = "Table: Total Monthly Marriage Licenses by Year",
+  col.names = c("Month", unique(monthly_totals$year)),  # Dynamically add years as column names
+  format = "simple"
+)
+
+
+```
 # References
