@@ -8,3 +8,204 @@ ChatGPT said:
 
 ChatGPT
 This paper examines trends in marriage licenses in Toronto, focusing on the effects of the COVID-19 pandemic on marital patterns. Using a dataset of marriage license registrations from 2015-2023, we apply time series analysis and statistical comparisons to investigate shifts in marriage rates before, during, and after the pandemic. Our findings show a significant decline in licenses issued during the pandemic, followed by a sharp increase in the post-pandemic period. These results suggest that social disruptions caused by the pandemic have had lasting effects on marriage trends, potentially influencing future policy and service planning.
+
+Date: 25 september 2024
+
+user
+here's the intro I wrote , help me check for spelling: # Introduction
+Marriage decisions are often thought to be driven by deeply emotional and symbolic impulses, such as getting married on Valentine's Day or during the Christmas holidays. However, this paper finds that practical considerations like favorable weather and scheduling play a more significant role in choosing wedding dates. By examining marriage license data in Toronto from 2011 to 2023, this paper looks at trends in key periods such as February, the summer months, and December showing how couples tend to prioritize convenience over sentimentality, particularly favoring summer months for weddings.
+
+
+While there have been studies such as [@citeforbes2021] which show decreases in marriage licences during global crisis like COVID-19, there has been little analysis on how local trends are influenced by emotionally significant dates or practicality. This paper fills that gap by examining the effect of these periods on marriage decisions in Toronto, providing information on how tradition, emotion, and practicality play a part in these decisions.
+
+We use data analysis and different visualizations to examine marriage license trends from 2011 to 2023, with a focus on key seasons such as summer, Christmas, and Valentine’s Day. While marriage license issuance declined significantly during the pandemic, these symbolic dates continued to show small spikes, indicating that emotional or symbolic significance still plays a role in some marriage decisions. However, the data leans more towards suggesting that practical considerations, such as weather and scheduling, are the primary drivers of marriage planning, with the summer months consistently seeing the highest activity.
+
+Marriage trends are a very good indicator of changes in society, reflecting broader shifts in demographics, economic circumstances, and changing cultural preferences. Understanding how external factors like seasonal holidays and different disruptions to the overall society influence marriage decisions can offer us valuable insights into human behavior. By identifying consistent seasonal patterns, this analysis can help wedding-related businesses (venues, caters, DJ's, etc.)anticipate periods of higher demand and better allocate resource. Additionally, civil centers can use this data to optimise staffing in order to increase efficiency.
+
+The Data @sec-data of this paper explores the opendatatoronto data and outlines tools and methods used to analyze the data and some preliminary observations. The Results @sec-results introduces more observations found from the data analysis. The Discussion @sec-disc ties back the findings to its real world relevance and summarizes key findings and outlines future areas of study.
+
+
+ChatGPT
+Your introduction is well-written with only a few minor adjustments needed for spelling and punctuation. Here is the revised version with corrections:
+
+Introduction
+
+Marriage decisions are often thought to be driven by deeply emotional and symbolic impulses, such as getting married on Valentine's Day or during the Christmas holidays. However, this paper finds that practical considerations, like favorable weather and scheduling, play a more significant role in choosing wedding dates. By examining marriage license data in Toronto from 2011 to 2023, this paper looks at trends in key periods such as February, the summer months, and December, showing how couples tend to prioritize convenience over sentimentality, particularly favoring summer months for weddings.
+
+While there have been studies such as [@citeforbes2021], which show decreases in marriage licenses during global crises like COVID-19, there has been little analysis of how local trends are influenced by emotionally significant dates or practicality. This paper fills that gap by examining the effect of these periods on marriage decisions in Toronto, providing information on how tradition, emotion, and practicality play a part in these decisions.
+
+We use data analysis and different visualizations to examine marriage license trends from 2011 to 2023, with a focus on key seasons such as summer, Christmas, and Valentine’s Day. While marriage license issuance declined significantly during the pandemic, these symbolic dates continued to show small spikes, indicating that emotional or symbolic significance still plays a role in some marriage decisions. However, the data leans more towards suggesting that practical considerations, such as weather and scheduling, are the primary drivers of marriage planning, with the summer months consistently seeing the highest activity.
+
+Marriage trends are a good indicator of changes in society, reflecting broader shifts in demographics, economic circumstances, and changing cultural preferences. Understanding how external factors like seasonal holidays and disruptions to overall society influence marriage decisions can offer us valuable insights into human behavior. By identifying consistent seasonal patterns, this analysis can help wedding-related businesses (venues, caterers, DJs, etc.) anticipate periods of higher demand and better allocate resources. Additionally, civil centers can use this data to optimize staffing in order to increase efficiency.
+
+The Data @sec-data section of this paper explores the opendatatoronto data and outlines tools and methods used to analyze the data along with some preliminary observations. The Results @sec-results section introduces more observations found from the data analysis. The Discussion @sec-disc section ties the findings to their real-world relevance, summarizes key insights, and outlines future areas of study.
+
+Key corrections:
+
+Fixed "licences" to "licenses" for consistency (assuming you want to use American spelling).
+Added a comma in a couple of places for smoother readability.
+Corrected "optimise" to "optimize" (American spelling).
+Fixed "caters" to "caterers" in the mention of wedding-related businesses.
+This version should be more polished! Let me know if you need further adjustments.
+
+User
+why doesn't this code render my table properly
+{r}
+#| label: tbl-marriage-variables
+#| tbl-cap: "Variable Overview"
+#| echo: false
+#| warning: false
+#| message: false
+
+
+library(tidyverse)
+library(here)
+library(kableExtra)
+data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
+
+# Creating an overview of the data
+data_overview <- tibble(
+  Variable = c("CIVIC_CENTRE", "MARRIAGE_LICENSES", "TIME_PERIOD", "ID" ),
+  Description = c(
+    "Code representing the civic center where the marriage license was issued",
+    "Number of marriage licenses issued in that month",
+    "The year and month when the licenses were issued, formatted as YYYY-MM",
+    "A unique identifier for each record"
+  ),
+  Data_Type = c(
+    "Character",  
+    "Numeric",
+    "Date",
+    "Numeric"
+  )
+)
+
+# show the table
+knitr::kable(data_overview, format = "latex", col.names = c('Variable', 'Description', 'Data Type')) %>%
+  kable_styling(latex_options = c("hold_position", "repeat_header"), full_width = FALSE) %>%
+  column_spec(2, width = "25em")                                                          
+
+ChatGPT
+There could be a few reasons why your table isn’t rendering as expected. Here are some things to check and suggestions for fixing the issue:
+
+Possible Issues:
+Incorrect path to the data file: If the file path isn't correct or the file itself isn't being found, it may cause issues in rendering the table. Ensure that here::here("data/analysis_data/analysis_data.csv") is pointing to the right location.
+Missing required packages: Make sure that all necessary packages (kableExtra, tidyverse, and here) are properly installed and loaded. If any are missing, they could cause problems with rendering the table.
+LaTeX rendering: Sometimes, issues with LaTeX-specific formatting can interfere with proper rendering. You may want to ensure your LaTeX settings are properly configured in the Quarto or LaTeX document you're using.
+Debugging Approach:
+Check Data Import: Ensure that the data is loaded properly by printing the first few rows of the data to check for any missing columns or improper formatting.
+Modify Table Output: Try to remove the advanced formatting options temporarily to ensure the table renders with simpler settings and then incrementally add more formatting back.
+Simplified Debugging Code Example:
+Here is a simplified version to ensure the table renders correctly, followed by adding the advanced formatting step by step:
+
+r
+Copy code
+#| label: tbl-marriage-variables
+#| tbl-cap: "Variable Overview"
+#| echo: false
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(here)
+library(knitr)
+library(kableExtra)
+
+# Load the data
+data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
+
+# Create an overview of the data
+data_overview <- tibble(
+  Variable = c("CIVIC_CENTRE", "MARRIAGE_LICENSES", "TIME_PERIOD", "ID"),
+  Description = c(
+    "Code representing the civic center where the marriage license was issued",
+    "Number of marriage licenses issued in that month",
+    "The year and month when the licenses were issued, formatted as YYYY-MM",
+    "A unique identifier for each record"
+  ),
+  Data_Type = c("Character", "Numeric", "Date", "Numeric")
+)
+
+# Render the table with simple formatting
+kable(data_overview, format = "latex", col.names = c('Variable', 'Description', 'Data Type')) 
+Step-by-Step Addition of Formatting:
+If the above works, then you can add more formatting like this:
+r
+Copy code
+# Add `kable_styling` options
+kable(data_overview, format = "latex", col.names = c('Variable', 'Description', 'Data Type')) %>%
+  kable_styling(latex_options = c("hold_position", "repeat_header"), full_width = FALSE)
+Finally, add column width specification if necessary:
+r
+Copy code
+# Add column width specification
+kable(data_overview, format = "latex", col.names = c('Variable', 'Description', 'Data Type')) %>%
+  kable_styling(latex_options = c("hold_position", "repeat_header"), full_width = FALSE) %>%
+  column_spec(2, width = "25em")
+Additional Debugging Tip:
+Check Rendering Log: If the table doesn’t render properly, check the output log for any warnings or errors regarding the table or LaTeX formatting. It could give you insight into what’s causing the issue.
+Path Verification:
+Make sure that the data file path is correct by testing with:
+
+r
+Copy code
+here::here("data/analysis_data/analysis_data.csv")
+If this path is wrong, you'll need to adjust it to match the actual file structure.
+
+Let me know if the issue persists after trying these steps!
+
+User 
+is this the correct code to make a heat map?                                                                                                  
+{r}
+#| label: fig-licenses-heatmap
+#| fig-cap: "Heatmap of Marriage Licenses by Year and Month"
+#| echo: false
+#| warning: false
+#| message: false
+
+# Making a Heatmap for Marriage Licenses by Year and Month
+data %>%
+  mutate(month_year = format(date, "%Y-%m")) %>%
+  ggplot(aes(x = year, y = as.factor(month), fill = marriage_licenses)) +
+  geom_tile() +
+  scale_fill_gradient(low = "white", high = "steelblue") +
+  labs(title = "Heatmap of Marriage Licenses by Year and Month", 
+       x = "Year", 
+       y = "Month") +
+  theme_minimal()
+ChatGPT said:
+
+ChatGPT
+Your heatmap code is mostly correct, but there are a few minor issues that need to be addressed:
+
+Key Adjustments:
+Month Axis Formatting: You are using as.factor(month), which is a good approach, but you may want to label the months using month names instead of numeric values for better readability.
+X-Axis and Y-Axis Labels: You may want to improve the readability of the axis labels, especially for months.
+Data Preprocessing: You use mutate(month_year = format(date, "%Y-%m")), but it’s not actually used in the plot, so this line could be removed unless it is needed for other purposes.
+Updated Heatmap Code:
+r
+Copy code
+#| label: fig-licenses-heatmap
+#| fig-cap: "Heatmap of Marriage Licenses by Year and Month"
+#| echo: false
+#| warning: false
+#| message: false
+
+# Making a Heatmap for Marriage Licenses by Year and Month
+data %>%
+  ggplot(aes(x = year, y = factor(month, levels = 1:12, labels = month.abb), fill = marriage_licenses)) +
+  geom_tile() +
+  scale_fill_gradient(low = "white", high = "steelblue") +
+  labs(title = "Heatmap of Marriage Licenses by Year and Month", 
+       x = "Year", 
+       y = "Month",
+       fill = "Number of Licenses") +
+  theme_minimal() +
+  theme(axis.text.y = element_text(size = 10), 
+        axis.text.x = element_text(angle = 45, hjust = 1))
+Key Changes:
+Month Labels: I used factor(month, levels = 1:12, labels = month.abb) to ensure that the months appear in the correct order (from January to December) and are labeled using their abbreviations (Jan, Feb, etc.).
+labs: Enhanced axis labeling to make it more descriptive.
+Theme Adjustments: Added a small tweak to improve the readability of the axis labels (axis.text.x rotated at 45 degrees and axis.text.y size slightly adjusted).
+Removed Unused Preprocessing: Removed mutate(month_year = format(date, "%Y-%m")) as it wasn’t being used in the plot.
+This should render your heatmap correctly and more clearly. Let me know if it works or if you need further adjustments!

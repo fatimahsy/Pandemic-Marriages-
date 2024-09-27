@@ -48,7 +48,7 @@ data <- read_csv(here::here("data/analysis_data/analysis_data"))
 Marriage decisions are often thought to be driven by deeply emotional and symbolic impulses, such as getting married on Valentine's Day or during the Christmas holidays. However, this paper finds that practical considerations like favorable weather and scheduling play a more significant role in choosing wedding dates. By examining marriage license data in Toronto from 2011 to 2023, this paper looks at trends in key periods such as February, the summer months, and December showing how couples tend to prioritize convenience over sentimentality, particularly favoring summer months for weddings.
 
 
-Wile there have been studies showing decreases in marriage licences during global crisis, there has been little analysis on how local trends are influenced by emotionally significant dates or practicality. This paper fills that gap by examining the effect of these periods on marriage decisions in Toronto, providing information on how tradition, emotion, and practicality play a part in these decisions.
+While there have been studies such as [@citeforbes2021] which show decreases in marriage licences during global crisis like COVID-19, there has been little analysis on how local trends are influenced by emotionally significant dates or practicality. This paper fills that gap by examining the effect of these periods on marriage decisions in Toronto, providing information on how tradition, emotion, and practicality play a part in these decisions.
 
 We use data analysis and different visualizations to examine marriage license trends from 2011 to 2023, with a focus on key seasons such as summer, Christmas, and Valentine’s Day. While marriage license issuance declined significantly during the pandemic, these symbolic dates continued to show small spikes, indicating that emotional or symbolic significance still plays a role in some marriage decisions. However, the data leans more towards suggesting that practical considerations, such as weather and scheduling, are the primary drivers of marriage planning, with the summer months consistently seeing the highest activity.
 
@@ -208,6 +208,7 @@ ggplot(data, aes(x = civic_centre, y = marriage_licenses, fill = civic_centre)) 
 #| echo: false
 #| warning: false
 #| message: false
+#https://www.datanovia.com/en/lessons/heatmap-in-r-static-and-interactive-visualization/#:~:text=A%20basic%20heatmap%20can%20be,parameters%20such%20as%20cell%20size. was referenced to make heatmap. 
 
 # Making a Heatmap for Marriage Licenses by Year and Month
 data %>%
@@ -319,6 +320,8 @@ Using Data about marriage licenses in Toronto, this paper tries to to see if the
 These results challenge the assumption that romantic or symbolic dates drive marriage decisions, suggesting instead that couples tend to prioritize practicality when planning their weddings. 
 
 One of the clearest patters shown from the data is the overwhelming preference for summer months when it comes t getting married. Across all years, these moths far exceed other months. This is largely attributed to the fact that during summer, logistics are much easier to work out. People are able to have weddings outside which is usually preferred. People also do not have to worry about bad weather like snow storms or heavy wind. Having a wedding during the summer also makes pictures look better since the sun is shining pretty well. In terms of guest availability, summer is usually optimal because there is no school, and many people take time off work. 
+
+
 Even thought dates like valentines day hold cultural and romantic significance, they do not show a corresponding increase in marriage activity. This indicates that while couples may enjoy celebrating love or symbolic days, their wedding planning is more practically driven by factors like convenience, weather, and timing. 
 
 While the findings offer important insights into marriage license trends, there are a few limitations. First, the analysis is restricted to marriage license data which does not account for actual ceremonies or couples' personal motivations for choosing specific dates. While the data clearly shows summer dates are more popular, it cannot directly explain why couples make these decisions or weather other factors like venue availability or budget considerations play a role. Additionally, the dataset does not include demographic information like age, income, race or cultural background which could help provide a better understanding of why certain groups might favour particular wedding dates. 
